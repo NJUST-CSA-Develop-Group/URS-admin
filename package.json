@@ -1,0 +1,42 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack --config webpack.prod.config.js",
+    "build:dev": "webpack --config webpack.dev.config.js",
+    "start": "webpack-dev-server --open --config webpack.dev.config.js",
+    "profile": "webpack --profile --json > stats.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@date-io/dayjs": "^1.1.0",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "dayjs": "^1.8.9",
+    "immutability-helper": "^3.0.0",
+    "material-ui-pickers": "^2.2.4",
+    "react": "^16.8.4",
+    "react-dnd": "^7.2.1",
+    "react-dnd-html5-backend": "^7.2.0",
+    "react-dom": "^16.8.4",
+    "react-router-dom": "^4.3.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.7",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/uuid": "^3.4.4",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1",
+    "webpack-merge": "^4.2.1"
+  }
+}
