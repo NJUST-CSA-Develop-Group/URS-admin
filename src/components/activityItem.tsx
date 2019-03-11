@@ -109,7 +109,6 @@ class ActivityItem extends React.Component<ActivityItemProps, ActivityItemState>
             })
     }
     download = () => {
-        console.log('download')
         let a = document.createElement('a')
         a.style.display = 'none'
         document.body.appendChild(a)

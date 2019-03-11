@@ -108,7 +108,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
                 this.props.dataHandle(this.ActivityData)
                 this.setState({
                     loading: false,
-                    items: data.map((value) => Back2Front(value))
+                    items: data.reduce(
+                        (pre, value) => pre.concat(Back2Front(value)),
+                        [] as FormItem[]
+                    )
                 })
             })
             .catch((error) => {

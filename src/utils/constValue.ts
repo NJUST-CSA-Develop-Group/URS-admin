@@ -16,13 +16,18 @@ const constValue = {
     },
     DragDropConst: Symbol(),
     extensionName: {
-        text: '单行文本'
+        text: '单行文本',
+        group: '分组'
     },
     extensionDesc: {
         text: {
             caseEditable: true,
             rangeName: '长度'
-        } as ExtensionDesc
+        } as ExtensionDesc,
+        group: {
+            caseEditable: false,
+            rangeName: ''
+        }
     },
     defaultCase(type: ExtensionType): string[] {
         switch (type) {
@@ -45,6 +50,22 @@ const constValue = {
                     require: false,
                     caseEditable: false,
                     rangeName: '长度',
+                    range: [],
+                    useRange: false
+                }
+            case 'group':
+                return {
+                    id: BigInt(id.toString()),
+                    extension: 'group',
+                    name: '',
+                    type: '',
+                    defaultValue: '',
+                    unique: false,
+                    description: '',
+                    tip: '',
+                    require: false,
+                    caseEditable: false,
+                    rangeName: '',
                     range: [],
                     useRange: false
                 }

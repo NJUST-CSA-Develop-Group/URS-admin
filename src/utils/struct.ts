@@ -30,7 +30,7 @@ export interface FormItem {
     id: bigint
     readonly extension: ExtensionType
     name: string
-    readonly type: string
+    type: string
     unique: boolean
     defaultValue: string //checkable
     description: string
@@ -39,7 +39,8 @@ export interface FormItem {
     case?: string[]
     useRange: boolean
     range: number[]
-    subItem?: FormItem[]
+    groupTo?: FormItem
+    //subItem?: FormItem[]
     readonly caseEditable: boolean
     readonly rangeName: string
 }
@@ -62,7 +63,7 @@ export interface DragData {
     type: ExtensionType
 }
 
-export type ExtensionType = 'text'
+export type ExtensionType = 'text' | 'group'
 
 export interface EditorData {
     id: string

@@ -24,10 +24,10 @@ import Switch from '@material-ui/core/Switch'
 import TextField from '@material-ui/core/TextField'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import DragHandleIcon from '@material-ui/icons/DragHandle'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import RefreshIcon from '@material-ui/icons/Refresh'
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore'
 // drag & drop
 import {
     ConnectDragSource,
@@ -200,7 +200,7 @@ class ControlItem extends React.Component<
                         {this.props.connectDragSource(
                             <div>
                                 <ListItemIcon>
-                                    <UnfoldMoreIcon
+                                    <DragHandleIcon
                                         className={
                                             this.props.disabled
                                                 ? classes.draggerDisabled

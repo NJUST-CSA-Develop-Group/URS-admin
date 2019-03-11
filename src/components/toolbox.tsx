@@ -32,7 +32,7 @@ class Toolbox extends React.Component<ToolboxProps, ToolboxState> {
                 <Folder name="扩展内容" disabled={this.props.disabled}>
                     <ToolItem
                         disabled={this.props.disabled}
-                        type="text"
+                        type="group"
                         removeNewItem={this.props.removeNewItem}
                     />
                 </Folder>
