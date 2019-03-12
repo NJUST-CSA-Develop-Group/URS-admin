@@ -25,7 +25,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import SaveIcon from '@material-ui/icons/Save'
 // myself utils code
 import constValue from '@/utils/constValue'
-import { Activity, EditorData } from '@/utils/struct'
+import { Activity, EditorData, FormItem } from '@/utils/struct'
 // myself components
 import ActivityItem from '@/components/activityItem'
 import Editor from '@/components/editor'
@@ -101,6 +101,7 @@ interface IndexState {
     tempId: string
     removeNewItem?(): void
     getData?(): EditorData
+    clipboard: FormItem[]
 }
 
 class Index extends React.Component<IndexProps, IndexState> {
@@ -114,7 +115,8 @@ class Index extends React.Component<IndexProps, IndexState> {
             dirty: false,
             openDialog: false,
             reason: '',
-            tempId: '_'
+            tempId: '_',
+            clipboard: []
         }
     }
     componentDidMount() {
@@ -307,6 +309,14 @@ class Index extends React.Component<IndexProps, IndexState> {
         }
         return activity.status === 0
     }
+    copy = (items: FormItem[]) => {
+        this.setState({
+            clipboard: items
+        })
+    }
+    paste = () => {
+        return this.state.clipboard
+    }
     render() {
         const classes = this.props.classes
         return (
@@ -422,6 +432,8 @@ class Index extends React.Component<IndexProps, IndexState> {
                                 disabled={!this.canEdit()}
                                 removeNewItemHandle={this.handleRemoveNewItem}
                                 dataHandle={this.handleData}
+                                copy={this.copy}
+                                paste={this.paste}
                             />
                         )}
                     </Grid>

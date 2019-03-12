@@ -6,7 +6,10 @@ import { Theme, WithStyles, withStyles } from '@material-ui/core/styles'
 // style components
 import List from '@material-ui/core/List'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
+import { PopoverPosition } from '@material-ui/core/Popover'
 // drag & drop
 import { ConnectDropTarget, DropTarget, DropTargetConnector, DropTargetMonitor } from 'react-dnd'
 // myself utils code
@@ -36,6 +39,8 @@ interface ControlListProps extends React.Props<ControlList>, WithStyles<typeof s
     disabled: boolean
     removeNewItemHandle(fn: () => void): void
     dataHandle(fn: () => BackFormItem[]): void
+    copy(items: FormItem[]): void
+    paste(): FormItem[]
 }
 
 interface ControlListState {
@@ -43,6 +48,8 @@ interface ControlListState {
     id: number
     addItemId: number
     foldId: number
+    anchorPosition?: PopoverPosition
+    anchorId?: number
 }
 
 class ControlList extends React.Component<
@@ -58,6 +65,7 @@ class ControlList extends React.Component<
                 it.id = id
                 if (it.groupTo != undefined) {
                     it.groupTo.id = id
+                    it.groupTo = undefined
                 }
                 id++
             }
@@ -72,7 +80,9 @@ class ControlList extends React.Component<
             id,
             formItems,
             addItemId: -1,
-            foldId: -1
+            foldId: -1,
+            anchorPosition: undefined,
+            anchorId: undefined
         }
     }
     componentDidMount() {
@@ -230,6 +240,89 @@ class ControlList extends React.Component<
         result = <div key={key}>{result}</div>
         return result
     }
+    contextMenu = (id: number, position: PopoverPosition) => {
+        this.setState({
+            anchorPosition: position,
+            anchorId: id
+        })
+    }
+    rootMenu = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        this.setState({
+            anchorPosition: { left: e.clientX, top: e.clientY },
+            anchorId: -1
+        })
+    }
+    reContextMenu = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        this.setState({
+            anchorPosition: undefined,
+            anchorId: undefined
+        })
+    }
+    menuClose = (e: React.SyntheticEvent) => {
+        e.preventDefault()
+        this.setState({
+            anchorPosition: undefined,
+            anchorId: undefined
+        })
+    }
+    copy = () => {
+        if (this.state.anchorId !== -1) {
+            let index = this.state.formItems.findIndex((value) => value.id === this.state.anchorId)
+            let items = [this.state.formItems[index]]
+            if (items[0].extension === 'group') {
+                let endIndex = this.state.formItems.findIndex(
+                    (value) => value.id === this.state.anchorId && value.type === 'end'
+                )
+                items = this.state.formItems.slice(index, endIndex + 1)
+            }
+            this.props.copy(JSON.parse(JSON.stringify(items)))
+        } else {
+            this.props.copy(JSON.parse(JSON.stringify(this.state.formItems)))
+        }
+        this.setState({
+            anchorPosition: undefined,
+            anchorId: undefined
+        })
+    }
+    paste = () => {
+        let id = this.state.id
+        let pasteData = JSON.parse(JSON.stringify(this.props.paste()))
+        let map = new Map<number, number>()
+        for (let it of pasteData) {
+            if (it.extension !== 'group') {
+                it.id = id
+                id++
+            } else {
+                if (it.type === 'begin') {
+                    map.set(it.id, id)
+                    it.id = id
+                    id++
+                } else if (it.type === 'end') {
+                    it.id = map.get(it.id)!
+                }
+            }
+        }
+        if (this.state.anchorId === -1) {
+            this.setState({
+                formItems: update(this.state.formItems, { $push: pasteData }),
+                anchorPosition: undefined,
+                anchorId: undefined,
+                id: id
+            })
+        } else {
+            let index = this.state.formItems.findIndex((value) => value.id === this.state.anchorId)
+            this.setState({
+                formItems: update(this.state.formItems, {
+                    $splice: [[index + 1, 0, ...pasteData]]
+                }),
+                anchorPosition: undefined,
+                anchorId: undefined,
+                id: id
+            })
+        }
+    }
     render() {
         //const classes = this.props.classes
         let pack = 0
@@ -249,6 +342,7 @@ class ControlList extends React.Component<
                                 moveItem={this.moveItem}
                                 nameUpdate={this.foldNameUpdate}
                                 delete={this.delete}
+                                contextMenu={this.contextMenu}
                                 disabled={this.props.disabled}
                             />,
                             pack,
@@ -289,6 +383,7 @@ class ControlList extends React.Component<
                             delete={this.delete}
                             caseAdd={this.caseAdd}
                             caseRemove={this.caseRemove}
+                            contextMenu={this.contextMenu}
                             disabled={this.props.disabled}
                         />,
                         pack,
@@ -301,7 +396,12 @@ class ControlList extends React.Component<
             <Paper>
                 {this.props.connectDropTarget(
                     <div>
-                        <List subheader={<ListSubheader>报名表单结构</ListSubheader>}>
+                        <List
+                            subheader={
+                                <ListSubheader onContextMenu={this.rootMenu}>
+                                    报名表单结构
+                                </ListSubheader>
+                            }>
                             {list}
                             {/*this.state.formItems.map((item) => (
                                 <ControlItem
@@ -345,6 +445,15 @@ class ControlList extends React.Component<
                                 disabled={this.props.disabled}
                             />*/}
                         </List>
+                        <Menu
+                            anchorReference="anchorPosition"
+                            anchorPosition={this.state.anchorPosition}
+                            open={!!this.state.anchorPosition}
+                            onContextMenu={this.reContextMenu}
+                            onClose={this.menuClose}>
+                            <MenuItem onClick={this.copy}>复制</MenuItem>
+                            <MenuItem onClick={this.paste}>粘贴</MenuItem>
+                        </Menu>
                     </div>
                 )}
             </Paper>

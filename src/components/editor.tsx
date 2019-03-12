@@ -67,6 +67,8 @@ interface EditorProps extends React.Props<Editor>, WithStyles<typeof style> {
     disabled: boolean
     removeNewItemHandle(fn: () => void): void
     dataHandle(fn: () => EditorData): void
+    copy(items: FormItem[]): void
+    paste(): FormItem[]
 }
 
 interface EditorState {
@@ -267,6 +269,8 @@ class Editor extends React.Component<EditorProps, EditorState> {
                             disabled={this.props.disabled}
                             removeNewItemHandle={this.props.removeNewItemHandle}
                             dataHandle={this.handleData}
+                            copy={this.props.copy}
+                            paste={this.props.paste}
                         />
                     )}
                 </div>

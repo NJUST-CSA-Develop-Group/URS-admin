@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import { PopoverPosition } from '@material-ui/core/Popover'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -70,6 +71,7 @@ interface GroupStartProps extends React.Props<GroupStart>, WithStyles<typeof sty
     //update(id: number, name: FormItemType, value: string): void
     nameUpdate(id: number, value: string): void
     delete(id: number): void
+    contextMenu(id: number, position: PopoverPosition): void
 }
 
 interface GroupStartState {
@@ -114,11 +116,19 @@ class GroupStart extends React.Component<
             nameEdit: false
         })
     }
+    menu = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        console.log(e.clientX, e.clientY)
+        this.props.contextMenu(this.props.fromItem.id, { left: e.clientX, top: e.clientY })
+        this.setState({
+            hover: false
+        })
+    }
     render() {
         const classes = this.props.classes
         return this.props.connectDragPreview(
             this.props.connectDropTarget(
-                <div>
+                <div onContextMenu={this.menu}>
                     <ListItem
                         onMouseEnter={this.handleEnter}
                         onMouseLeave={this.handleLeave}

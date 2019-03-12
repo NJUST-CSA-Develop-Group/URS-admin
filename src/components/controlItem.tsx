@@ -18,6 +18,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Paper'
+import { PopoverPosition } from '@material-ui/core/Popover'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Switch from '@material-ui/core/Switch'
@@ -102,6 +103,7 @@ interface ControlItemProps extends React.Props<ControlItem>, WithStyles<typeof s
     delete(id: number): void
     caseAdd(id: number, value: string): void
     caseRemove(id: number, index: number): void
+    contextMenu(id: number, position: PopoverPosition): void
 }
 
 interface ControlItemState {
@@ -188,11 +190,19 @@ class ControlItem extends React.Component<
             constValue.defaultCase(this.props.fromItem.extension)
         )
     }
+    menu = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        console.log(e.clientX, e.clientY)
+        this.props.contextMenu(this.props.fromItem.id, { left: e.clientX, top: e.clientY })
+        this.setState({
+            hover: false
+        })
+    }
     render() {
         const classes = this.props.classes
         return this.props.connectDragPreview(
             this.props.connectDropTarget(
-                <div>
+                <div onContextMenu={this.menu}>
                     <ListItem
                         onMouseEnter={this.handleEnter}
                         onMouseLeave={this.handleLeave}
