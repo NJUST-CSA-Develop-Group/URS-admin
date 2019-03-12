@@ -91,17 +91,17 @@ interface ControlItemProps extends React.Props<ControlItem>, WithStyles<typeof s
     fromItem: FormItem
     disabled: boolean
     addItem(data: DragData): void
-    getIndex(id: bigint): number
-    moveItem(id: bigint, index: number): void
+    getIndex(id: number): number
+    moveItem(id: number, index: number): void
     //removeAddItem(): boolean
     update(
-        id: bigint,
+        id: number,
         name: FormItemType,
         value: string | boolean | undefined | number[] | string[]
     ): void
-    delete(id: bigint): void
-    caseAdd(id: bigint, value: string): void
-    caseRemove(id: bigint, index: number): void
+    delete(id: number): void
+    caseAdd(id: number, value: string): void
+    caseRemove(id: number, index: number): void
 }
 
 interface ControlItemState {

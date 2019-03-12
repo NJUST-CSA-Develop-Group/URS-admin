@@ -40,9 +40,9 @@ interface ControlListProps extends React.Props<ControlList>, WithStyles<typeof s
 
 interface ControlListState {
     formItems: FormItem[]
-    id: bigint
-    addItemId: bigint
-    foldId: bigint
+    id: number
+    addItemId: number
+    foldId: number
 }
 
 class ControlList extends React.Component<
@@ -51,10 +51,10 @@ class ControlList extends React.Component<
 > {
     constructor(props: ControlListProps & ControlListTargetProps) {
         super(props)
-        let id = BigInt(0)
+        let id = 0
         let formItems = [] as FormItem[]
         for (let it of this.props.formItems) {
-            if (it.id === BigInt(-1)) {
+            if (it.id === -1) {
                 it.id = id
                 if (it.groupTo != undefined) {
                     it.groupTo.id = id
@@ -71,8 +71,8 @@ class ControlList extends React.Component<
         this.state = {
             id,
             formItems,
-            addItemId: BigInt(-1),
-            foldId: BigInt(-1)
+            addItemId: -1,
+            foldId: -1
         }
     }
     componentDidMount() {
@@ -96,7 +96,7 @@ class ControlList extends React.Component<
             items = [constValue.defaultValue(data.id, data.type)]
         }
         this.setState({
-            id: this.state.id + BigInt(1),
+            id: this.state.id + 1,
             addItemId: data.id,
             formItems: update(this.state.formItems, {
                 $push: items
@@ -104,10 +104,10 @@ class ControlList extends React.Component<
         })
         //console.log(this.state.formItems)
     }
-    getIndex = (id: bigint) => {
+    getIndex = (id: number) => {
         return this.state.formItems.findIndex((value) => value.id === id)
     }
-    moveItem = (id: bigint, index: number) => {
+    moveItem = (id: number, index: number) => {
         //console.log(id, index)
         let itemIndex = this.state.formItems.findIndex((value) => value.id === id)
         let item = [this.state.formItems[itemIndex]]
@@ -130,7 +130,7 @@ class ControlList extends React.Component<
         this.props.dirty()
     }
     removeAddItem = () => {
-        if (this.state.addItemId == BigInt(-1)) {
+        if (this.state.addItemId == -1) {
             this.props.dirty()
             return false
         }
@@ -150,7 +150,7 @@ class ControlList extends React.Component<
         return true
     }
     update = (
-        id: bigint,
+        id: number,
         name: FormItemType,
         value: string | boolean | undefined | number[] | string[]
     ) => {
@@ -163,7 +163,7 @@ class ControlList extends React.Component<
         })
         this.props.dirty()
     }
-    delete = (id: bigint) => {
+    delete = (id: number) => {
         let index = this.state.formItems.findIndex((item) => item.id === id)
         let length = 1
         if (this.state.formItems[index].extension === 'group') {
@@ -179,7 +179,7 @@ class ControlList extends React.Component<
         })
         this.props.dirty()
     }
-    caseAdd = (id: bigint, value: string) => {
+    caseAdd = (id: number, value: string) => {
         let index = this.state.formItems.findIndex((item) => item.id === id)
         this.setState({
             formItems: update(this.state.formItems, {
@@ -188,7 +188,7 @@ class ControlList extends React.Component<
         })
         this.props.dirty()
     }
-    caseRemove = (id: bigint, caseIndex: number) => {
+    caseRemove = (id: number, caseIndex: number) => {
         let index = this.state.formItems.findIndex((item) => item.id === id)
         //console.log(this.state.formItems[index].extension)
         this.setState({
@@ -198,7 +198,7 @@ class ControlList extends React.Component<
         })
         this.props.dirty()
     }
-    foldNameUpdate = (id: bigint, value: string) => {
+    foldNameUpdate = (id: number, value: string) => {
         let startIndex = this.state.formItems.findIndex(
             (item) => item.id === id && item.type === 'begin'
         )
@@ -212,14 +212,14 @@ class ControlList extends React.Component<
             })
         })
     }
-    fold = (id: bigint) => {
+    fold = (id: number) => {
         this.setState({
             foldId: id
         })
     }
     unfold = () => {
         this.setState({
-            foldId: BigInt(-1)
+            foldId: -1
         })
     }
     packItem(item: JSX.Element, count: number, key: string) {
@@ -361,7 +361,7 @@ const dropSpec = {
             if (data.type === 'group') {
                 items = [
                     constValue.defaultValue(component.state.id, data.type),
-                    constValue.defaultValue(component.state.id + BigInt(1), data.type)
+                    constValue.defaultValue(component.state.id + 1, data.type)
                 ]
                 items[0].type = 'begin'
                 items[1].type = 'end'
@@ -369,12 +369,12 @@ const dropSpec = {
                 items = [constValue.defaultValue(component.state.id, data.type)]
             }
             component.setState({
-                id: component.state.id + BigInt(items.length),
+                id: component.state.id + items.length,
                 formItems: items
             })
         } else {
             component.setState({
-                addItemId: BigInt(-1)
+                addItemId: -1
             })
         }
     }

@@ -61,15 +61,15 @@ interface GroupStartTargetProps {
 interface GroupStartProps extends React.Props<GroupStart>, WithStyles<typeof style> {
     fromItem: FormItem
     disabled: boolean
-    fold(id: bigint): void
+    fold(id: number): void
     unfold(): void
     addItem(data: DragData): void
-    getIndex(id: bigint): number
-    moveItem(id: bigint, index: number): void
+    getIndex(id: number): number
+    moveItem(id: number, index: number): void
     //removeAddItem(): boolean
-    //update(id: bigint, name: FormItemType, value: string): void
-    nameUpdate(id: bigint, value: string): void
-    delete(id: bigint): void
+    //update(id: number, name: FormItemType, value: string): void
+    nameUpdate(id: number, value: string): void
+    delete(id: number): void
 }
 
 interface GroupStartState {

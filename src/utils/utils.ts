@@ -5,7 +5,7 @@ export function Back2Front(back: BackFormItem): FormItem[] {
     let desc = constValue.extensionDesc[back.extension]
     let result = [
         {
-            id: BigInt(-1),
+            id: -1,
             extension: back.extension,
             name: back.name,
             type: back.type,
@@ -30,7 +30,7 @@ export function Back2Front(back: BackFormItem): FormItem[] {
             result = result.concat(Back2Front(it))
         }
         let end = {
-            id: BigInt(-1),
+            id: -1,
             extension: back.extension,
             name: back.name,
             type: 'end',

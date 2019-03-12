@@ -35,11 +35,11 @@ const constValue = {
                 return []
         }
     },
-    defaultValue(id: bigint, type: ExtensionType): FormItem {
+    defaultValue(id: number, type: ExtensionType): FormItem {
         switch (type) {
             case 'text':
                 return {
-                    id: BigInt(id.toString()),
+                    id: id,
                     extension: 'text',
                     name: '',
                     type: '',
@@ -55,7 +55,7 @@ const constValue = {
                 }
             case 'group':
                 return {
-                    id: BigInt(id.toString()),
+                    id: id,
                     extension: 'group',
                     name: '',
                     type: '',

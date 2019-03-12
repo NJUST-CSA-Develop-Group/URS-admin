@@ -95,7 +95,7 @@ class ToolItem extends React.Component<ToolItemProps & ToolItemSourceProps, Tool
 
 const dragSpec = {
     beginDrag(props: ToolItemProps) {
-        return { id: BigInt(-1), originIndex: -1, type: props.type } as DragData
+        return { id: -1, originIndex: -1, type: props.type } as DragData
     },
     canDrag(props: ToolItemProps) {
         return !props.disabled

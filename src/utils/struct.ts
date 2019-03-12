@@ -27,7 +27,7 @@ export interface ExtensionDesc {
 }
 
 export interface FormItem {
-    id: bigint
+    id: number
     readonly extension: ExtensionType
     name: string
     type: string
@@ -58,7 +58,7 @@ export type FormItemType =
     | 'subItem'
 
 export interface DragData {
-    id: bigint
+    id: number
     originIndex: number
     type: ExtensionType
 }
