@@ -118,6 +118,15 @@ class Index extends React.Component<IndexProps, IndexState> {
         }
     }
     componentDidMount() {
+        window.onbeforeunload = (e: any) => {
+            if (this.state.dirty) {
+                if (!!e) {
+                    e.returnValue = '编辑区的内容尚未保存'
+                }
+                return '编辑区的内容尚未保存'
+            }
+            return null
+        }
         this.load()
     }
     load = (callback?: () => void) => {
@@ -153,7 +162,7 @@ class Index extends React.Component<IndexProps, IndexState> {
     }
     go = (id: string) => {
         if (id === 'login') {
-            fetch(constValue.hostName + '/logout',{
+            fetch(constValue.hostName + '/logout', {
                 mode: constValue.corsType,
                 cache: 'no-cache'
             })

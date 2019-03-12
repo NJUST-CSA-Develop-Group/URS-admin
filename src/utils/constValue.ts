@@ -1,4 +1,5 @@
 import { ExtensionDesc, FormItem, ExtensionType } from './struct'
+import ExtensionDefault from './extensionDefault'
 
 const constValue = {
     hostName: 'http://localhost', //'https://www.turing-cup.online/voteapp',
@@ -36,40 +37,7 @@ const constValue = {
         }
     },
     defaultValue(id: number, type: ExtensionType): FormItem {
-        switch (type) {
-            case 'text':
-                return {
-                    id: id,
-                    extension: 'text',
-                    name: '',
-                    type: '',
-                    defaultValue: '',
-                    unique: false,
-                    description: '',
-                    tip: '',
-                    require: false,
-                    caseEditable: false,
-                    rangeName: '长度',
-                    range: [],
-                    useRange: false
-                }
-            case 'group':
-                return {
-                    id: id,
-                    extension: 'group',
-                    name: '',
-                    type: '',
-                    defaultValue: '',
-                    unique: false,
-                    description: '',
-                    tip: '',
-                    require: false,
-                    caseEditable: false,
-                    rangeName: '',
-                    range: [],
-                    useRange: false
-                }
-        }
+        return ExtensionDefault[type](id)
     }
 }
 
