@@ -240,7 +240,6 @@ class Editor extends React.Component<EditorProps, EditorState> {
                                 <div>
                                     <DateTimePicker
                                         disabled={!this.state.endUsed || this.props.disabled}
-                                        className={classes.time}
                                         value={this.state.activity.endTime}
                                         onChange={this.endTimeChange}
                                         format="YYYY-MM-DD HH:mm:ss"

@@ -353,9 +353,9 @@ class ControlList extends React.Component<
 }
 
 const dropSpec = {
-    drop(_: ControlListProps, monitor: DropTargetMonitor, component: ControlList) {
+    drop(/*_: ControlListProps, monitor: DropTargetMonitor, component: ControlList*/) {
         //console.log(component.state.formItems)
-        if (component.state.formItems.length == 0) {
+        /*if (component.state.formItems.length == 0) {
             const data = monitor.getItem()
             let items = []
             if (data.type === 'group') {
@@ -376,6 +376,11 @@ const dropSpec = {
             component.setState({
                 addItemId: -1
             })
+        }*/
+    },
+    hover(_: ControlListProps, monitor: DropTargetMonitor, component: ControlList) {
+        if (monitor.getItem().id == -1) {
+            component.addItem(monitor.getItem())
         }
     }
 }

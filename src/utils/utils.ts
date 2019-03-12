@@ -74,6 +74,7 @@ export function Front2Back(front: FormItem[], index: number): BackFormItem[] {
             if (it.type === 'end') {
                 break
             } else if (it.type === 'begin') {
+                res.type = 'group'
                 res.subItem = Front2Back(front, i + 1)
                 i += res.subItem.length + 1
             }

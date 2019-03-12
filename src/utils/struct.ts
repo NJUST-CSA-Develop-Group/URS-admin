@@ -63,7 +63,29 @@ export interface DragData {
     type: ExtensionType
 }
 
-export type ExtensionType = 'text' | 'group'
+type ExExType =
+    | 'personName'
+    | 'teamName'
+    | 'sex'
+    | 'nation'
+    | 'political'
+    | 'studentNumber'
+    | 'phone'
+    | 'qq'
+    | 'email'
+    | 'idcard'
+    | 'GPA'
+    | 'rank'
+
+export type ExtensionType =
+    | 'text'
+    | 'number'
+    | 'radio'
+    | 'checkbox'
+    | 'date'
+    | 'textarea'
+    | 'group'
+    | ExExType
 
 export interface EditorData {
     id: string
