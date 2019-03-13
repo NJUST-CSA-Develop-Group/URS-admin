@@ -119,6 +119,8 @@ const constValue = {
     },
     defaultCase(type: ExtensionType): string[] {
         switch (type) {
+            case 'political':
+                return ['群众', '团员', '预备党员', '党员']
             default:
                 return []
         }
