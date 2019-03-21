@@ -100,7 +100,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             username: '',
             password: ''
         })
-        fetch(constValue.hostName + '/users', {
+        fetch(constValue.hostName + '/user', {
             mode: constValue.corsType,
             cache: 'no-cache'
         })
@@ -181,7 +181,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                                 </MenuItem>
                                 {this.state.users.map((item) => {
                                     return (
-                                        <MenuItem key={item.id} value={item.id}>
+                                        <MenuItem key={item.id} value={item.name}>
                                             {item.name}
                                         </MenuItem>
                                     )
