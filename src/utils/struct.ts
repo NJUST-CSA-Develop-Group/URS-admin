@@ -94,3 +94,12 @@ export interface EditorData {
     endTime?: string
     items: BackFormItem[]
 }
+
+export interface ApplicantRecord {
+    [x: string]: string | number | object
+}
+export interface ApplicantItemStruct {
+    id: string
+    unique: string
+    data: ApplicantRecord
+}

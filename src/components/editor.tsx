@@ -20,6 +20,7 @@ import constValue from '@/utils/constValue'
 import { Activity, BackFormItem, FormItem, EditorData } from '@/utils/struct'
 import { Back2Front } from '@/utils/utils'
 // myself components
+import ApplicantList from '@/components/applicantList'
 import ControlList from '@/components/controlList'
 
 const style = (theme: Theme) => ({
@@ -251,6 +252,12 @@ class Editor extends React.Component<EditorProps, EditorState> {
                         </div>
                     </MuiPickersUtilsProvider>
                 </Paper>
+                {this.state.activity.status > 0 && (
+                    <ApplicantList
+                        finish={this.state.activity.status == 3}
+                        activityId={this.state.activity.id}
+                    />
+                )}
                 <div className={classes.controlList}>
                     {this.state.loading ? (
                         <div className={classes.loading}>

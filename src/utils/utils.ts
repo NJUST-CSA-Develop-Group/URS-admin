@@ -1,5 +1,5 @@
 import constValue from './constValue'
-import { BackFormItem, FormItem } from './struct'
+import { BackFormItem, FormItem, ApplicantRecord, ApplicantItemStruct } from './struct'
 
 export function Back2Front(back: BackFormItem): FormItem[] {
     let desc = constValue.extensionDesc[back.extension]
@@ -96,4 +96,37 @@ export function Front2Back(front: FormItem[], index: number): BackFormItem[] {
         subItem:
             front.subItem != undefined ? front.subItem.map((value) => Front2Back(value)) : undefined
     }*/
+}
+
+function flatApplicant(base: string, item: ApplicantRecord) {
+    let result: { key: string; value: string }[] = []
+    for (let it of Object.keys(item)) {
+        switch (typeof item[it]) {
+            case 'string':
+                result.push({
+                    key: base + it,
+                    value: item[it] as string
+                })
+                break
+            case 'number':
+                result.push({
+                    key: it,
+                    value: item[it].toString()
+                })
+                break
+            case 'object':
+                result.push(...flatApplicant(it + ' > ', item[it] as ApplicantRecord))
+        }
+    }
+    return result
+}
+
+export function transToXlsx(item: ApplicantItemStruct) {
+    let arr = [{ key: 'id', value: item.id }]
+    arr.push(...flatApplicant('', item.data))
+    let result: { [x: string]: string } = {}
+    for (let it of arr) {
+        result[it.key] = it.value
+    }
+    return result
 }

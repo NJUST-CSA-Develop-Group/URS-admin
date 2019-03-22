@@ -1,5 +1,6 @@
 // framework
 import * as React from 'react'
+import * as XLSX from 'xlsx'
 // theme & style
 import { Theme, WithStyles, withStyles } from '@material-ui/core/styles'
 import {} from 'csstype'
@@ -16,7 +17,8 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt'
 import StopIcon from '@material-ui/icons/Stop'
 // myself utils code
 import constValue from '@/utils/constValue'
-import { Activity } from '@/utils/struct'
+import { Activity, ApplicantItemStruct } from '@/utils/struct'
+import { transToXlsx } from '@/utils/utils'
 
 const style = (theme: Theme) => ({
     root: {
@@ -109,11 +111,26 @@ class ActivityItem extends React.Component<ActivityItemProps, ActivityItemState>
             })
     }
     download = () => {
-        let a = document.createElement('a')
+        fetch(`${constValue.hostName}/admin/activity/${this.props.activity.id}/applicant`, {
+            mode: constValue.corsType,
+            cache: 'no-cache'
+        })
+            .then((res) => res.json())
+            .then((data: ApplicantItemStruct[]) => {
+                let book = XLSX.utils.book_new()
+                let sheet = XLSX.utils.json_to_sheet(data.map((value) => transToXlsx(value)))
+                XLSX.utils.book_append_sheet(book, sheet, this.props.activity.name + '报名表')
+                XLSX.writeFile(book, this.props.activity.name + '报名表.xlsx')
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('未能获取报名数据\n请联系科协技术部')
+            })
+        /*let a = document.createElement('a')
         a.style.display = 'none'
         document.body.appendChild(a)
         a.href = `${constValue.hostName}/admin/activity/${this.props.activity.id}/file`
-        a.click()
+        a.click()*/
     }
     render() {
         const classes = this.props.classes
@@ -174,7 +191,7 @@ class ActivityItem extends React.Component<ActivityItemProps, ActivityItemState>
                         </Tooltip>
                     )}
                     {this.props.activity.status == 3 && (
-                        <Tooltip title="下载报名信息" placement="top">
+                        <Tooltip title="下载报名结果" placement="top">
                             <IconButton onClick={this.download}>
                                 <SaveAltIcon />
                             </IconButton>
