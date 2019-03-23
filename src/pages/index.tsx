@@ -285,7 +285,7 @@ class Index extends React.Component<IndexProps, IndexState> {
                 })
                 .catch((error) => {
                     console.log(error)
-                    alert('提交报名信息失败\n请联系科协技术部')
+                    alert('修改报名信息失败\n请联系科协技术部')
                 })
         }
     }
@@ -429,7 +429,8 @@ class Index extends React.Component<IndexProps, IndexState> {
                                 activity={
                                     this.state.activities.find(
                                         (value) => value.id === this.props.match.params.id
-                                    ) || ({ id: '-', name: '', publisher: '' } as Activity)
+                                    ) ||
+                                    ({ id: '-', name: '', publisher: '', status: 0 } as Activity)
                                 }
                                 dirty={this.handleDirty}
                                 disabled={!this.canEdit()}
