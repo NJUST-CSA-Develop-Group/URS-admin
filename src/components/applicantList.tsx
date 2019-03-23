@@ -56,7 +56,10 @@ class ApplicantList extends React.Component<ApplicantListProps, ApplicantListSta
             mode: constValue.corsType,
             cache: 'no-cache'
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((data: ApplicantItemStruct[]) => {
                 this.setState({
                     items: data
@@ -107,7 +110,10 @@ class ApplicantList extends React.Component<ApplicantListProps, ApplicantListSta
                 cache: 'no-cache'
             }
         )
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((data: { reason: string }) => {
                 if (data.reason != '') {
                     alert(data.reason)

@@ -104,7 +104,10 @@ class Login extends React.Component<LoginProps, LoginState> {
             mode: constValue.corsType,
             cache: 'no-cache'
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((users: User[]) => {
                 this.setState({
                     loading: false,

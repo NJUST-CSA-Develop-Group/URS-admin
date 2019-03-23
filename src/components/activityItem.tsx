@@ -93,7 +93,10 @@ class ActivityItem extends React.Component<ActivityItemProps, ActivityItemState>
             mode: constValue.corsType,
             cache: 'no-cache'
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((data: { reason: string }) => {
                 if (data.reason != '') {
                     alert(data.reason)
@@ -115,7 +118,10 @@ class ActivityItem extends React.Component<ActivityItemProps, ActivityItemState>
             mode: constValue.corsType,
             cache: 'no-cache'
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((data: ApplicantItemStruct[]) => {
                 let book = XLSX.utils.book_new()
                 let sheet = XLSX.utils.json_to_sheet(data.map((value) => transToXlsx(value)))

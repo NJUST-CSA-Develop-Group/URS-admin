@@ -106,7 +106,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
             mode: constValue.corsType,
             cache: 'no-cache'
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw res.status
+                return res.json()
+            })
             .then((data: BackFormItem[]) => {
                 this.props.dataHandle(this.ActivityData)
                 this.setState({
