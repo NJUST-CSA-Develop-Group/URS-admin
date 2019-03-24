@@ -444,7 +444,7 @@ class Index extends React.Component<IndexProps, IndexState> {
                     <Grid item sm={3} className={classes.scrollContent + ' ' + classes.list}>
                         <div className={classes.appBarSpacer} />
                         <Toolbox
-                            disabled={this.props.match.params.id === '_'}
+                            disabled={this.props.match.params.id === '_' || !this.canEdit()}
                             removeNewItem={this.removeNewItem}
                         />
                     </Grid>

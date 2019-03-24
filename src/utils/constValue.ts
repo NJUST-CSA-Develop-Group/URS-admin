@@ -4,7 +4,7 @@ import ExtensionDefault from './extensionDefault'
 const constValue = {
     hostName: '/voteapp',
     rootPath: '/voteapp/page/',
-    corsType: 'cors' as 'cors',
+    corsType: 'no-cors' as 'no-cors',
     loginErrMsg: (errCode: number) => {
         switch (errCode) {
             case 401:
