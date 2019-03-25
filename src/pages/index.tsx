@@ -172,7 +172,7 @@ class Index extends React.Component<IndexProps, IndexState> {
                 cache: 'no-cache'
             })
         }
-        this.props.history.replace(constValue.rootPath + id)
+        this.props.history.replace(/*constValue.rootPath + */id)
     }
     handleSure = () => {
         this.go(this.state.tempId)

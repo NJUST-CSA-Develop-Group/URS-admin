@@ -155,7 +155,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 if (!res.ok) {
                     throw res.status
                 }
-                this.props.history.replace(constValue.rootPath + 'activity/_')
+                this.props.history.replace(/*constValue.rootPath + */'activity/_')
             })
             .catch((error: number) => {
                 alert(constValue.loginErrMsg(error))
