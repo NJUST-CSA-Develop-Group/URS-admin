@@ -23,6 +23,7 @@ import constValue from '@/utils/constValue'
 // pages
 import Login from '@/pages/login'
 import Index from '@/pages/index'
+import CspFree from '@/pages/cspFree'
 import NoMatch from '@/pages/noMatch'
 
 const theme = createMuiTheme({
@@ -71,6 +72,7 @@ class App extends React.Component<AppProps, AppState> {
                             <Redirect from="/" to="/activity/_" exact strict />
                             <Route path="/login" exact component={Login} />
                             <Route path="/activity/:id" exact component={Index} />
+                            <Route path="/csp" exact component={CspFree} />
                             <Route component={NoMatch} />
                         </Switch>
                     </Router>

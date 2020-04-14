@@ -150,6 +150,10 @@ class Index extends React.Component<IndexProps, IndexState> {
                 }
             })
             .catch((error) => {
+                if(error === 401) {
+                    this.go('login')
+                    return
+                }
                 console.log(error)
                 alert('无法获取活动列表\n请联系科协技术部')
             })
@@ -176,12 +180,14 @@ class Index extends React.Component<IndexProps, IndexState> {
     }
     handleSure = () => {
         this.go(this.state.tempId)
+        console.log(this.state.tempId)
         this.setState({
             create: this.state.tempId[9] == '-',
             dirty: false,
             openDialog: false,
             tempId: '_'
         })
+        console.log(this.state.tempId)
     }
     handleClose = () => {
         this.setState({
@@ -303,6 +309,17 @@ class Index extends React.Component<IndexProps, IndexState> {
             this.go('login')
         }
     }
+    toggleCSP = () => {
+        if (this.state.dirty) {
+            this.setState({
+                openDialog: true,
+                reason: '切换到CSP免费资格管理',
+                tempId: 'csp'
+            })
+        } else {
+            this.go('csp')
+        }
+    }
     canEdit = () => {
         let activity = this.state.activities.find(
             (value) => value.id === this.props.match.params.id
@@ -370,6 +387,7 @@ class Index extends React.Component<IndexProps, IndexState> {
                                     className={classes.titleMain}>
                                     工具箱
                                 </Typography>
+                                <Button color="inherit" onClick={this.toggleCSP}>CSP</Button>
                                 <IconButton color="inherit" onClick={this.handleMenuOpen}>
                                     <AccountCircleIcon />
                                 </IconButton>
