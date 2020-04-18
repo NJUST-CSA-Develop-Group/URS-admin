@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import Switch from '@material-ui/core/Switch'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -71,6 +72,9 @@ const style = (theme: Theme) => ({
         position: 'absolute' as PositionProperty,
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 2
+    },
+    switchName: {
+        paddingLeft: theme.spacing.unit * 2
     }
 })
 
@@ -86,6 +90,8 @@ interface CspFreeState {
     uploader?: () => Promise<void>
     refresher?: () => Promise<void>
     downloader?: () => Promise<void>
+    status: boolean
+    loading: boolean
 }
 
 class CspFree extends React.Component<CspFreeProps, CspFreeState> {
@@ -97,7 +103,35 @@ class CspFree extends React.Component<CspFreeProps, CspFreeState> {
             doing: false,
             uploader: undefined,
             refresher: undefined,
-            downloader: undefined
+            downloader: undefined,
+            status: false,
+            loading: true
+        }
+    }
+    componentDidMount() {
+        this.load()
+    }
+    load = async () => {
+        this.setState({
+            loading: true
+        })
+        try {
+            let res = await fetch(`${constValue.hostName}/csp/audit/status`, {
+                method: 'GET',
+                mode: constValue.corsType,
+                cache: 'no-cache'
+            })
+            if (!res.ok) {
+                throw res.status
+            }
+            let data = await res.json()
+            this.setState({
+                loading: false,
+                status: data.status === 'STATUS_OPEN'
+            })
+        } catch (error) {
+            console.log(error)
+            alert('加载失败\n请联系科协技术部')
         }
     }
     go = (id: string) => {
@@ -132,6 +166,36 @@ class CspFree extends React.Component<CspFreeProps, CspFreeState> {
     }
     toggleCSP = () => {
         this.go('activity/_')
+    }
+    toggleStatus = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        let oldStatus = this.state.status
+        this.setState({
+            loading: true,
+            status: e.target.checked
+        })
+        try {
+            let res = await fetch(`${constValue.hostName}/admin/csp/audit`, {
+                method: 'PUT',
+                mode: constValue.corsType,
+                cache: 'no-cache',
+                body: JSON.stringify({
+                    status: e.target.checked ? 'STATUS_OPEN' : 'STATUS_CLOSED'
+                })
+            })
+            if (!res.ok) {
+                throw res.status
+            }
+            this.setState({
+                loading: false
+            })
+        } catch (error) {
+            console.log(error)
+            alert('加载失败\n请联系科协技术部')
+            this.setState({
+                loading: false,
+                status: oldStatus
+            })
+        }
     }
     render() {
         const classes = this.props.classes
@@ -202,6 +266,15 @@ class CspFree extends React.Component<CspFreeProps, CspFreeState> {
                                     className={classes.titleMain}>
                                     CSP免费资格管理
                                 </Typography>
+                                <Typography className={classes.switchName} color="inherit">
+                                    允许申请
+                                </Typography>
+                                <Switch
+                                    checked={this.state.status}
+                                    onChange={this.toggleStatus}
+                                    disabled={this.state.loading}
+                                    color="secondary"
+                                />
                             </Grid>
                             <Grid item sm={6} className={classes.titleTabs}>
                                 <Tabs

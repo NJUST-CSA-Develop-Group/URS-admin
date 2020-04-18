@@ -6,6 +6,7 @@ import { Theme, WithStyles, withStyles } from '@material-ui/core/styles'
 import { OverflowXProperty } from 'csstype'
 // style components
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -62,6 +63,7 @@ interface ScoreUpdateProps extends React.Props<ScoreUpdate>, WithStyles<typeof s
 }
 
 interface ScoreUpdateState {
+    name: string
     passScore: string
     data?: ScoreItem[]
     parsing: boolean
@@ -73,6 +75,7 @@ class ScoreUpdate extends React.Component<ScoreUpdateProps, ScoreUpdateState> {
     constructor(props: ScoreUpdateProps) {
         super(props)
         this.state = {
+            name: '',
             passScore: '0',
             data: undefined,
             parsing: false,
@@ -80,6 +83,11 @@ class ScoreUpdate extends React.Component<ScoreUpdateProps, ScoreUpdateState> {
             error: false
         }
         this.props.setUploader(this.upload)
+    }
+    handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            name: e.target.value.trim()
+        })
     }
     handlePassScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = parseInt(e.target.value)
@@ -120,7 +128,11 @@ class ScoreUpdate extends React.Component<ScoreUpdateProps, ScoreUpdateState> {
             })
         }
     }
-    public upload = async () => {
+    upload = async () => {
+        if (this.state.name == '') {
+            alert('名称不能为空')
+            return
+        }
         if (this.state.error) {
             alert('下线分数格式错误')
             return
@@ -135,8 +147,9 @@ class ScoreUpdate extends React.Component<ScoreUpdateProps, ScoreUpdateState> {
                 cache: 'no-cache',
                 headers: { 'Content-type': 'application/json; charset=UTF-8' },
                 body: JSON.stringify({
-                    passScore: this.state.passScore,
-                    data: this.state.data
+                    name: this.state.name,
+                    passScore: `total:${this.state.passScore}`,
+                    scoreData: this.state.data
                 })
             })
             if (!res.ok) {
@@ -166,15 +179,28 @@ class ScoreUpdate extends React.Component<ScoreUpdateProps, ScoreUpdateState> {
                             上传CSP成绩单，用于提供自动免费名额
                         </Typography>
                     </div>
-                    <TextField
-                        label="下限分数"
-                        required
-                        type="number"
-                        disabled={this.state.upload}
-                        value={this.state.passScore}
-                        error={this.state.error}
-                        onChange={this.handlePassScoreChange}
-                    />
+                    <Grid container>
+                        <Grid item sm={6}>
+                            <TextField
+                                label="认证/比赛名"
+                                required
+                                disabled={this.state.upload}
+                                value={this.state.name}
+                                onChange={this.handleNameChange}
+                            />
+                        </Grid>
+                        <Grid item sm={3}>
+                            <TextField
+                                label="下限分数"
+                                required
+                                type="number"
+                                disabled={this.state.upload}
+                                value={this.state.passScore}
+                                error={this.state.error}
+                                onChange={this.handlePassScoreChange}
+                            />
+                        </Grid>
+                    </Grid>
                 </Paper>
                 <Paper className={classes.root}>
                     <div className={classes.titleContent}>
