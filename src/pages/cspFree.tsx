@@ -178,6 +178,7 @@ class CspFree extends React.Component<CspFreeProps, CspFreeState> {
                 method: 'PUT',
                 mode: constValue.corsType,
                 cache: 'no-cache',
+                headers: { 'Content-type': 'application/json; charset=UTF-8' },
                 body: JSON.stringify({
                     status: e.target.checked ? 'STATUS_OPEN' : 'STATUS_CLOSED'
                 })

@@ -1,14 +1,22 @@
 // framework
 import * as React from 'react'
 import * as XLSX from 'xlsx'
+import * as dayjs from 'dayjs'
+import { Dayjs } from 'dayjs'
+import DayjsUtils from '@date-io/dayjs'
 // theme & style
 import { Theme, WithStyles, withStyles } from '@material-ui/core/styles'
 import { OverflowXProperty } from 'csstype'
 // style components
+import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import { TableHead, TableRow, TableCell, Typography } from '@material-ui/core'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Typography from '@material-ui/core/Typography'
+import { MuiPickersUtilsProvider, DateTimePicker } from 'material-ui-pickers'
 // myself utils code
 import constValue from '@/utils/constValue'
 
@@ -42,16 +50,22 @@ interface FreeListProps extends React.Props<FreeList>, WithStyles<typeof style> 
 }
 
 interface FreeListState {
+    loading: boolean
     count: number
     data: DataItem[]
+    startTime: string
+    endTime: string
 }
 
 class FreeList extends React.Component<FreeListProps, FreeListState> {
     constructor(props: FreeListProps) {
         super(props)
         this.state = {
+            loading: false,
             count: 0,
-            data: []
+            data: [],
+            startTime: dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+            endTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
         }
     }
     componentDidMount() {
@@ -59,11 +73,14 @@ class FreeList extends React.Component<FreeListProps, FreeListState> {
     }
     load = async () => {
         try {
-            let res = await fetch(`${constValue.hostName}/admin/csp/free`, {
-                method: 'GET',
-                mode: constValue.corsType,
-                cache: 'no-cache'
-            })
+            let res = await fetch(
+                `${constValue.hostName}/admin/csp/free?start=${this.state.startTime}&end=${this.state.endTime}`,
+                {
+                    method: 'GET',
+                    mode: constValue.corsType,
+                    cache: 'no-cache'
+                }
+            )
             if (!res.ok) {
                 throw res.status
             }
@@ -92,11 +109,53 @@ class FreeList extends React.Component<FreeListProps, FreeListState> {
             `CSP免费名额名单${new Date().toLocaleString().replace(/\//g, '-')}.xlsx`
         )
     }
+    setStartTime = async (e: Dayjs) => {
+        this.setState({
+            startTime: e.format('YYYY-MM-DD HH:mm:ss'),
+            loading: true
+        })
+        await this.load()
+        this.setState({
+            loading: false
+        })
+    }
+    setEndTime = async (e: Dayjs) => {
+        this.setState({
+            endTime: e.format('YYYY-MM-DD HH:mm:ss'),
+            loading: true
+        })
+        await this.load()
+        this.setState({
+            loading: false
+        })
+    }
     render() {
         const classes = this.props.classes
         return (
             <div>
                 <Paper className={classes.root}>
+                    <Grid container>
+                        <MuiPickersUtilsProvider utils={DayjsUtils}>
+                            <Grid item sm={6}>
+                                <Typography>开始时间</Typography>
+                                <DateTimePicker
+                                    disabled={this.state.loading}
+                                    value={this.state.startTime}
+                                    onChange={this.setStartTime}
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                />
+                            </Grid>
+                            <Grid item sm={6}>
+                                <Typography>结束时间</Typography>
+                                <DateTimePicker
+                                    disabled={this.state.loading}
+                                    value={this.state.endTime}
+                                    onChange={this.setEndTime}
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                />
+                            </Grid>
+                        </MuiPickersUtilsProvider>
+                    </Grid>
                     <div className={classes.tablePre}>
                         <div className={classes.spacer}></div>
                         <Typography variant="body1">共计: {this.state.count}人</Typography>

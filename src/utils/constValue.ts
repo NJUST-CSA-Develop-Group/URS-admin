@@ -2,8 +2,8 @@ import { ExtensionDesc, FormItem, ExtensionType } from './struct'
 import ExtensionDefault from './extensionDefault'
 
 const constValue = {
-    hostName: '/voteapp',
-    rootPath: '/voteapp/page/',
+    hostName: '/urs/api',//'/urs/api', for debug: 'http://localhost'
+    rootPath: '/urs/manage/',//'/urs/manage/', for debug: '/'
     corsType: 'cors' as 'cors',
     loginErrMsg: (errCode: number) => {
         switch (errCode) {
